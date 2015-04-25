@@ -10,11 +10,8 @@
 
 int main(int argc, char *argv[]){
     FILE *input = getInputStream(argc, argv);
-    FILE *output = NULL;
-    if (input == NULL){
-        fprintf(stderr, "Error, cannot open input for read\n");
-        exit(EXIT_FAILURE);
-    }
+    FILE *output = getOutputStream(argc, argv);
+    if (input == NULL || output == NULL){ exit(EXIT_FAILURE); }
 
     cleanupIO(input, output);
     return 0;

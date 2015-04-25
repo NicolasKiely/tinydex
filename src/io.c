@@ -22,11 +22,36 @@ FILE *getInputStream(int argc, char* argv[]){
     for (i=1; i<argc; i++){
         if (argFlagSet(argc, argv, i-1, 'i')){
             inputStream = fopen(argv[i], "r");
+            if (inputStream == NULL){
+                fprintf(stderr,
+                    "Error, could not open %s for input\n", argv[i]
+                );
+            }
             break;
         }
     }
 
     return inputStream;
+}
+
+
+FILE *getOutputStream(int argc, char* argv[]){
+    int i;
+    FILE *outputStream = stdout;
+
+    for (i=1; i<argc; i++){
+        if (argFlagSet(argc, argv, i-1, 'o')){
+            outputStream = fopen(argv[i], "w");
+            if (outputStream == NULL){
+                fprintf(stderr,
+                    "Error, could not open %s for output\n", argv[i]
+                );
+            }
+            break;
+        }
+    }
+
+    return outputStream;
 }
 
 

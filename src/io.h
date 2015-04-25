@@ -33,6 +33,16 @@ FILE *getInputStream(int argc, char* argv[]);
 
 
 /**
+ * Gets default or specified output source
+ * - argc: Argument count passed to main()
+ * - argv: Argument set passed to main()
+ * Returns file descriptor
+ * Side effects: None
+ */
+FILE *getOutputStream(int argc, char* argv[]);
+
+
+/**
  * Cleans up input/output streams
  * - input: Input stream. Closed if not stdin or null
  * - output: Output stream. Closed if not stdin or null
