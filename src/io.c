@@ -19,7 +19,7 @@ FILE *getInputStream(int argc, char* argv[]){
 
     for (i=1; i<argc; i++){
         if (argFlagSet(argc, argv, i-1, 'i')){
-            inputStream = fopen(argv[i], 'r');
+            inputStream = fopen(argv[i], "r");
             break;
         }
     }

@@ -29,7 +29,7 @@ int argFlagSet(int argc, char* argv[], int i, char flag);
  * Returns file descriptor
  * Side effects: None
  */
-int getInputStream(int argc, char* argv[]);
+FILE *getInputStream(int argc, char* argv[]);
 
 
 /* Reads from standard input and returns entries object */
