@@ -32,6 +32,16 @@ int argFlagSet(int argc, char* argv[], int i, char flag);
 FILE *getInputStream(int argc, char* argv[]);
 
 
+/**
+ * Cleans up input/output streams
+ * - input: Input stream. Closed if not stdin or null
+ * - output: Output stream. Closed if not stdin or null
+ * Returns void
+ * Side effects: May close files
+ */
+void cleanupIO(FILE *input, FILE *output);
+
+
 /* Reads from standard input and returns entries object */
 void readInput();
 

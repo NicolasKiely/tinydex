@@ -1,3 +1,5 @@
+#include <stdlib.h>
+
 #include "io.h"
 
 
@@ -25,6 +27,17 @@ FILE *getInputStream(int argc, char* argv[]){
     }
 
     return inputStream;
+}
+
+
+void cleanupIO(FILE *input, FILE *output){
+    if (input != NULL && input != stdin){
+        fclose(input);
+    }
+
+    if (output != NULL && output != stdout && output != stderr){
+        fclose(output);
+    }
 }
 
 
