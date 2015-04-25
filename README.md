@@ -52,3 +52,13 @@ Input format:
     * Specially interpretted records above need to be explicitly set with
     corresponding flags to work. So for @records to import files, -@
     needs to be passed. Otherwise @file will be treated as a literal string
+
+
+Common Command line args:
+    * -i: Input file. Defaults to stdin
+
+    * -o: Output file. Defaults to stdout
+
+    * -@ -& -! and/or -$: Enables special record interpretting
+
+    * -d: Record delimitter. Defaults to newline ("\n")
