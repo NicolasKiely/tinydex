@@ -35,5 +35,6 @@ bin/*
 misc/
 obj/*
 
+*~
 *.swp
 *.swo
