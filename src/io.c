@@ -1,6 +1,7 @@
 #include "io.h"
 
-int arg_flag_set(int argc, char* argv[], int i, char flag){
+
+int argFlagSet(int argc, char* argv[], int i, char flag){
     /* Check bounds */
     if (i < 0 || i >= argc) { return 0; }
 
@@ -12,5 +13,20 @@ int arg_flag_set(int argc, char* argv[], int i, char flag){
 }
 
 
-void read_input(){
+FILE *getInputStream(int argc, char* argv[]){
+    int i;
+    FILE *inputStream = stdin;
+
+    for (i=1; i<argc; i++){
+        if (argFlagSet(argc, argv, i-1, 'i')){
+            inputStream = fopen(argv[i], 'r');
+            break;
+        }
+    }
+
+    return inputStream;
+}
+
+
+void readInput(){
 }

@@ -4,7 +4,10 @@
 #ifndef IO_HEADER 
 #define IO_HEADER
 
+#include <stdio.h>
+
 #include "record.h"
+
  
 /**
  * Checks if an arg position represents a flag
@@ -16,10 +19,20 @@
  * Return true if flag match, false otherwise
  * Side effects: None
  */
-int arg_flag_set(int argc, char* argv[], int i, char flag);
+int argFlagSet(int argc, char* argv[], int i, char flag);
+
+
+/**
+ * Gets default or specified input source
+ * - argc: Argument count passed to main()
+ * - argv: Argument set passed to main()
+ * Returns file descriptor
+ * Side effects: None
+ */
+int getInputStream(int argc, char* argv[]);
 
 
 /* Reads from standard input and returns entries object */
-void read_input();
+void readInput();
 
 #endif
