@@ -7,7 +7,8 @@ Primary Goals:
 
     * Small: Minimal use of computational resources
 
-    * Flexible: Adopt a modular framework and integrate well with existing \*nix tools.
+    * Flexible: Adopt a modular framework and integrate well with
+existing nix tools.
 
 
 Target Work Environments:
@@ -36,12 +37,18 @@ Input format:
 
     * Newline-delimitted records
 
-    * Records starting with @ treat the record as a filename, and imports the contents of the file as a single record
+    * Records starting with @ treat the record as a filename,
+and imports the contents of the file as a single record
 
-    * Records starting with & treat the record as a filename, and imports the contents of the file as a list of records
+    * Records starting with & treat the record as a filename,
+and imports the contents of the file as a list of records
 
-    * Records starting with ! treat the record as a shell script snippet, and are evaluated as a single record
+    * Records starting with ! treat the record as a shell script snippet,
+and are evaluated as a single record
 
-    * Records starting with $ treat the record as a shell script snippet, and are evaluated as a list of records
+    * Records starting with $ treat the record as a shell script snippet,
+and are evaluated as a list of records
 
-    * Specially interpretted records above need to be explicitly set with corresponding flags to work. So for @records to import files, -@ needs to be passed. Otherwise @file will be treated as a literal string
+    * Specially interpretted records above need to be explicitly set
+with corresponding flags to work. So for @records to import files,
+-@ needs to be passed. Otherwise @file will be treated as a literal string
