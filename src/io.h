@@ -67,6 +67,6 @@ void IOcontext_free(struct IOcontext **pioc);
 
 
 /* Reads from standard input and returns entries object */
-void readInput();
+void IO_readInput();
 
 #endif

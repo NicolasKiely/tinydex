@@ -37,9 +37,9 @@ struct RecordList {
 
 
 /* Creates new record */
-struct Record *createRecord();
+struct Record *Record_create();
 
 /* Frees record */
-void freeRecord(struct Record *pRecord);
+void Record_free(struct Record **ppRecord);
 
 #endif

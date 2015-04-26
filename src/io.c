@@ -114,5 +114,5 @@ void IOcontext_free(struct IOcontext **pIoc){
 }
 
 
-void readInput(){
+void IO_readInput(struct IOcontext *ioc){
 }
