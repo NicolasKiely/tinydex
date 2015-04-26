@@ -4,6 +4,9 @@
 #ifndef RECORD_HEADER 
 #define RECORD_HEADER
 
+#define RECORD_CHUNK_SIZE 4096
+
+
 /* Record data structure */
 struct Record {
     /* Buffer of characters */
@@ -41,5 +44,12 @@ struct Record *Record_create();
 
 /* Frees record */
 void Record_free(struct Record **ppRecord);
+
+
+/* Creates new record list */
+struct RecordList *RecordList_create();
+
+/* Frees record list */
+void RecordList_free(struct RecordList **ppRecords);
 
 #endif
