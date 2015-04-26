@@ -1,68 +1,116 @@
 #include <stdlib.h>
+#include <string.h>
 
 #include "io.h"
 
 
-int argFlagSet(int argc, char* argv[], int i, char flag){
-    /* Check bounds */
-    if (i < 0 || i >= argc) { return 0; }
+int *IOcontext_lookupArgFlags(int argc, char* argv[]){
+    int i;
+    int *pFlags = malloc(255 * sizeof(int));
+    if (pFlags == NULL){
+        fprintf(stderr, "Error, could not allocate memory for flags\n");
+        return NULL;
+    }
+    memset(pFlags, -1, 255 * sizeof(int));
 
-    /* Check if flag. Notice 1-length strings also return 0 here */
-    if (argv[i][0] != '-') { return 0; }
+    /* Loop over all arguments */
+    for (i=0; i<argc; i++){
+        /* Check if flag */
+        if (argv[i][0] != '-'){ continue; }
 
-    /* Return comparison */
-    return argv[i][1] == flag;
+        /* Set flag character's position */
+        pFlags[ (int) argv[i][1] ] = i;
+    }
+    
+    return pFlags;
 }
 
 
-FILE *getInputStream(int argc, char* argv[]){
+FILE *IOcontext_lookupFile(
+    int *pFlags, const char *type, const char *mode,
+    FILE *def, int argc, char *argv[]
+){
     int i;
-    FILE *inputStream = stdin;
+    FILE *file = def;
+    if (pFlags==NULL || type==NULL || mode==NULL){ return NULL; }
 
-    for (i=1; i<argc; i++){
-        if (argFlagSet(argc, argv, i-1, 'i')){
-            inputStream = fopen(argv[i], "r");
-            if (inputStream == NULL){
-                fprintf(stderr,
-                    "Error, could not open %s for input\n", argv[i]
-                );
-            }
-            break;
+    i = pFlags[ (int) type[0] ];
+
+    if (i > -1){
+        if (i+1 >= argc || argv[i+1][0] == '-'){
+            fprintf(stderr, "Error, %s file not specified\n", type);
+            return NULL;
+        }
+
+        file = fopen(argv[i+1], mode);
+        if (file == NULL){
+            fprintf(stderr,
+                "Error, could not open %s file '%s'\n", type, argv[i+1]
+            );
+            return NULL;
         }
     }
 
-    return inputStream;
+    return file;
 }
 
 
-FILE *getOutputStream(int argc, char* argv[]){
-    int i;
-    FILE *outputStream = stdout;
+struct IOcontext *IOcontext_create(int argc, char* argv[]){
+    /* Initialize io context */
+    struct IOcontext *ioc = malloc(sizeof(struct IOcontext));
+    if (ioc == NULL){
+        fprintf(stderr, "Error, could not allocate memory for io\n");
+        return NULL;
+    }
+    memset(ioc, 0, sizeof(struct IOcontext));
 
-    for (i=1; i<argc; i++){
-        if (argFlagSet(argc, argv, i-1, 'o')){
-            outputStream = fopen(argv[i], "w");
-            if (outputStream == NULL){
-                fprintf(stderr,
-                    "Error, could not open %s for output\n", argv[i]
-                );
-            }
-            break;
-        }
+    /* Get arg flag lookup */
+    ioc->pFlags = IOcontext_lookupArgFlags(argc, argv);
+    if (ioc->pFlags == NULL){
+        IOcontext_free(&ioc);
+        return NULL;
+    }
+    
+    /* Open files, default to stdin/stdout */
+    ioc->input  = IOcontext_lookupFile(
+        ioc->pFlags, "input", "r", stdin, argc, argv
+    );
+    ioc->output = IOcontext_lookupFile(
+        ioc->pFlags, "output", "w", stdout, argc, argv
+    );
+
+    if (ioc->input==NULL || ioc->output==NULL){
+        IOcontext_free(&ioc);
+        return NULL;
     }
 
-    return outputStream;
+    return ioc;
 }
 
 
-void cleanupIO(FILE *input, FILE *output){
-    if (input != NULL && input != stdin){
-        fclose(input);
+
+void IOcontext_free(struct IOcontext **pIoc){
+    struct IOcontext *ioc;
+    if (pIoc == NULL){ return; }
+    ioc = *pIoc;
+    if (ioc == NULL){ return; }
+
+    /* Close any files */
+    if (ioc->input != NULL && ioc->input != stdin){
+        fclose(ioc->input);
     }
 
-    if (output != NULL && output != stdout && output != stderr){
-        fclose(output);
+    if (ioc->output != NULL && ioc->output != stdout){
+        fclose(ioc->output);
     }
+
+    /* Clean up allocated flag buffer */
+    if (ioc->pFlags != NULL){
+        free(ioc->pFlags);
+    }
+
+    free(ioc);
+    *pIoc = NULL;
 }
 
 

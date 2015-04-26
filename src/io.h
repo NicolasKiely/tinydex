@@ -8,48 +8,62 @@
 
 #include "record.h"
 
+
+/* Combined Input/Output Streams, as well as flag map */
+struct IOcontext {
+    FILE *input;
+    FILE *output;
+    int *pFlags;
+};
+
  
 /**
- * Checks if an arg position represents a flag
- * Safely checks for bounds
+ * Gets array of flag positions. I'th position in array corresponds to
+ * ascii value i. Value at position is last position flag appears
+ * in argv[], or -1 if not present.
  * - argc: Argument count passed to main()
  * - argv: Arg set passed to main()
- * - i: Index of arg to check
- * - flag: Flag character to check
- * Return true if flag match, false otherwise
+ * Return newly allocated int array
  * Side effects: None
  */
-int argFlagSet(int argc, char* argv[], int i, char flag);
+int *IOcontext_lookupArgFlags(int argc, char* argv[]);
 
 
 /**
- * Gets default or specified input source
+ * Gets file stream based on defaults or program args
+ * - pFlags: Flag map build by _lookupArgFlags
+ * - type: Either "input" or "output". Case sensitive!
+ * - mode: File mode string (eg "r")
+ * - def: Default file (stdin or stdout)
+ * - argc: main()'s argc arg count
+ * - argv: main()'s argv arg list 
+ * Returns File pointer if successful, null if not
+ * Side effects: May open files for read/write
+ */
+FILE *IOcontext_lookupFile(
+    int *pFlags, const char *type, const char *mode,
+    FILE *def, int argc, char *argv[]
+);
+
+
+/**
+ * Gets default or specified input and output sources
  * - argc: Argument count passed to main()
  * - argv: Argument set passed to main()
- * Returns file descriptor
+ * Returns IO context
  * Side effects: None
  */
-FILE *getInputStream(int argc, char* argv[]);
+struct IOcontext *IOcontext_create(int argc, char* argv[]);
 
 
 /**
- * Gets default or specified output source
- * - argc: Argument count passed to main()
- * - argv: Argument set passed to main()
- * Returns file descriptor
- * Side effects: None
- */
-FILE *getOutputStream(int argc, char* argv[]);
-
-
-/**
- * Cleans up input/output streams
- * - input: Input stream. Closed if not stdin or null
- * - output: Output stream. Closed if not stdin or null
+ * Cleans up input/output context
+ * - pioc: Reference to context pointer
  * Returns void
- * Side effects: May close files
+ * Side effects: Frees allocated memory, reassigns context to null,
+ *   and closes any files opened
  */
-void cleanupIO(FILE *input, FILE *output);
+void IOcontext_free(struct IOcontext **pioc);
 
 
 /* Reads from standard input and returns entries object */

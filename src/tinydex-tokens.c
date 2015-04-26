@@ -9,10 +9,10 @@
 
 
 int main(int argc, char *argv[]){
-    FILE *input = getInputStream(argc, argv);
-    FILE *output = getOutputStream(argc, argv);
-    if (input == NULL || output == NULL){ exit(EXIT_FAILURE); }
+    struct IOcontext *ioc = IOcontext_create(argc, argv);
+    if (ioc == NULL){ exit(EXIT_FAILURE); }
 
-    cleanupIO(input, output);
-    return 0;
+
+    IOcontext_free(&ioc);
+    return EXIT_SUCCESS;
 }
